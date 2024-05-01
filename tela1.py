@@ -62,5 +62,5 @@ def show_tela1():
         st.markdown(f"{home} x {away} - {horario} | Odd: {odd}")
         link = f'<div style="text-align:left"><a href="https://bolsadeaposta.com/exchange/sport/1/market/{id_mercado}">{"Bolsa de Aposta"}</a></div>'
         st.markdown(link, unsafe_allow_html=True)
-        st.write('')
+        st.write('______________________________________________')
         st.write('')
