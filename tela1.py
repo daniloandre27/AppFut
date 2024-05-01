@@ -58,7 +58,7 @@ def show_tela1():
         id_mercado = ajustar_id_mercado(f)
 
     
-        st.markdown(f"<span style='color:blue'><b>{liga}</b></span>", unsafe_allow_html=True)
+        st.markdown(f"<span style='color:green'><b>{liga}</b></span>", unsafe_allow_html=True)
         st.markdown(f"{home} x {away} - {horario} | Odd: {odd}")
         link = f'<div style="text-align:left"><a href="https://bolsadeaposta.com/exchange/sport/1/market/{id_mercado}">{"Bolsa de Aposta"}</a></div>'
         st.markdown(link, unsafe_allow_html=True)
