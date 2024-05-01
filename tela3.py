@@ -39,7 +39,6 @@ def entropy(probabilities):
 
 # Iniciando a Tela 3
 def show_tela3():
-    st.title("Monstro dos Greens")
     st.header("Lay 0 x 1")
 
     dia = st.date_input("Data de Análise", date.today())
@@ -84,10 +83,9 @@ def show_tela3():
         id_mercado = ajustar_id_mercado(f)
 
     
-        st.write(f"Liga: {liga}")
-        st.write(f"Jogo: {home} x {away}")
-        st.write(f"Horário: {horario}")
-        st.write(f"Odd 0 x 1: {odd}")
+        st.markdown(f"<span style='color:green'><b>{liga}</b></span>", unsafe_allow_html=True)
+        st.markdown(f"{home} x {away} - {horario} | Odd: {odd}")
         link = f'<div style="text-align:left"><a href="https://bolsadeaposta.com/exchange/sport/1/market/{id_mercado}">{"Bolsa de Aposta"}</a></div>'
         st.markdown(link, unsafe_allow_html=True)
-        st.write(''); st.text(''); st.text('')
+        st.write('______________________________________________')
+        st.write('')

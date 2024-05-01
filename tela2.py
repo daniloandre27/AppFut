@@ -25,7 +25,6 @@ def ajustar_id_mercado(id_mercado, comprimento_decimal_desejado=9):
 
 # Iniciando a Tela 2
 def show_tela2():
-    st.title("Monstro dos Greens")
     st.header("Lay Away")
 
     dia = st.date_input("Data de Análise", date.today())
@@ -59,12 +58,9 @@ def show_tela2():
         id_mercado = ajustar_id_mercado(f)
 
     
-        st.write(f"Liga: {liga}")
-        st.write(f"Jogo: {home} x {away}")
-        st.write(f"Horário: {horario}")
-        st.write(f"Odd: {odd}")
+        st.markdown(f"<span style='color:green'><b>{liga}</b></span>", unsafe_allow_html=True)
+        st.markdown(f"{home} x {away} - {horario} | Odd: {odd}")
         link = f'<div style="text-align:left"><a href="https://bolsadeaposta.com/exchange/sport/1/market/{id_mercado}">{"Bolsa de Aposta"}</a></div>'
         st.markdown(link, unsafe_allow_html=True)
-        st.write('')
-        st.write('')
+        st.write('______________________________________________')
         st.write('')

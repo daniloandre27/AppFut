@@ -50,6 +50,27 @@ def adicionar_usuario(usuario, senha, usuario_atual):
         escritor_csv.writerow([usuario, senha])
         st.success("Usuário registrado com sucesso!")
 
+def alterar_senha(usuario, senha_atual, nova_senha):
+    if not verificar_login(usuario, senha_atual):
+        st.error("Senha atual incorreta. Tente novamente.")
+        return
+    # Atualize a senha no arquivo CSV (ou onde você armazena as informações dos usuários)
+    # Implemente a lógica para atualizar a senha aqui
+    # Por exemplo, você pode procurar o usuário pelo nome e atualizar a senha
+    # Certifique-se de armazenar a senha de forma segura (hash e sal)
+    with open('usuarios.csv', mode='r') as arquivo:
+        leitor_csv = csv.reader(arquivo, delimiter=';')
+        linhas = list(leitor_csv)
+
+    with open('usuarios.csv', mode='w', newline='') as arquivo:
+        escritor_csv = csv.writer(arquivo, delimiter=';')
+        for linha in linhas:
+            if linha[0] == usuario:
+                linha[1] = nova_senha
+            escritor_csv.writerow(linha)
+
+    st.success("Senha alterada com sucesso!")
+
 # Configuração da página
 st.set_page_config(page_title="Meu Dashboard", layout="centered")
 
@@ -71,7 +92,7 @@ def main():
                 st.error("Usuário ou senha incorretos.")
     else:
         # Menu de navegação
-        st.title("Monstro dos Greens")
+        st.title("Ciência das Apostas")
         paginas = ['Lay Home', 'Lay Away', 'Lay 0 x 1']
         escolha = st.radio('', paginas)
         if escolha == 'Lay Home':
@@ -82,19 +103,69 @@ def main():
             show_tela3()
 
         # Opções para o administrador
-        if verificar_admin(st.session_state['usuario_atual']):
-            if st.button("Registrar novo usuário"):
-                usuario = st.text_input("Novo usuário")
-                senha = st.text_input("Nova senha", type="password")
-                if st.button("Confirmar registro"):
-                    adicionar_usuario(usuario, senha, st.session_state['usuario_atual'])
+        # Dentro da função main()
+
+        # Botão para mostrar/ocultar o subheader de cadastro de usuários
+        mostrar_subheader_cadastro = st.button("Cadastro de usuários")
+
+        # Verifica se o botão foi clicado e altera a visibilidade do subheader de cadastro de usuários
+        if mostrar_subheader_cadastro:
+            if 'exibir_subheader_cadastro' not in st.session_state:
+                st.session_state['exibir_subheader_cadastro'] = True
+            else:
+                st.session_state['exibir_subheader_cadastro'] = not st.session_state['exibir_subheader_cadastro']
+
+        # Verifica se o subheader de cadastro de usuários deve ser exibido
+        if st.session_state.get('exibir_subheader_cadastro', False):
+            # Subheader para a seção de cadastro de usuários
+            st.subheader("Cadastro de Usuários")
+
+            # Aqui você pode adicionar o código para o cadastro de usuários
+            # Por exemplo:
+            novo_usuario = st.text_input("Novo usuário", key="novo_usuario")
+            nova_senha_cadastro = st.text_input("Nova senha", key="nova_senha_cadastro", type="password")
+            # Botão para cadastrar o usuário
+            if st.button("Cadastrar"):
+                adicionar_usuario(novo_usuario, nova_senha_cadastro, st.session_state['usuario_atual'])
+
+        else:
+            pass
+
         
         # Opção para alterar a senha
-        if st.button("Alterar senha"):
-            senha_atual = st.text_input("Senha atual", type="password")
-            nova_senha = st.text_input("Nova senha", type="password")
-            if st.button("Confirmar alteração"):
-                pass# Adicione aqui o código para alterar a senha do usuário logado
+
+        # Botão para mostrar/ocultar o subheader de alteração de senha
+        mostrar_subheader = st.button("Alteração de senha")
+
+        # Verifica se o botão foi clicado e altera a visibilidade do subheader
+        if mostrar_subheader:
+            if 'exibir_subheader' not in st.session_state:
+                st.session_state['exibir_subheader'] = True
+            else:
+                st.session_state['exibir_subheader'] = not st.session_state['exibir_subheader']
+
+        # Verifica se o subheader deve ser exibido
+        if st.session_state.get('exibir_subheader', False):
+            # Subheader para a seção de alteração de senha
+            st.subheader("Alterar Senha")
+
+            # Opção para alterar a senha
+            senha_atual = st.text_input("Senha atual", key="senha_atual")
+            nova_senha_input = st.text_input("Nova senha", key="nova_senha_input")
+            # Botão para alterar a senha
+            if st.button("Alterar"):
+                if verificar_login(st.session_state['usuario_atual'], senha_atual):
+                    nova_senha = nova_senha_input
+                    alterar_senha(st.session_state['usuario_atual'], senha_atual, nova_senha)
+                    # Atualize o valor da nova senha na sessão após a confirmação
+                    st.session_state['nova_senha'] = nova_senha
+                else:
+                    st.error("Senha atual incorreta. Tente novamente.")
+        else:
+            # Se o subheader não deve ser exibido, exibe apenas o botão para mostrar/ocultar
+            pass
+
+
 
         # Botão para sair da aplicação
         if st.button("Sair"):
