@@ -173,6 +173,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
+st.write("<h1 style='text-align: center; font-size: 15px;'>Quer participar? Chama o Altair</h1>", unsafe_allow_html=True)
+st.write("<h1 style='text-align: center; font-size: 15px;'>zap: (22)98802-4908</h1>", unsafe_allow_html=True)    
 
 
 
