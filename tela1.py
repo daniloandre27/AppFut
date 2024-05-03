@@ -60,7 +60,7 @@ def show_tela1():
     
         st.markdown(f"<span style='color:green'><b>{liga}</b></span>", unsafe_allow_html=True)
         st.markdown(f"{home} x {away} - {horario} | Odd: {odd}")
-        link = f'<div style="text-align:left"><a href="https://bolsadeaposta.com/exchange/sport/1/market/{id_mercado}">{"Bolsa de Aposta"}</a></div>'
+        link = f'<div style="text-align:left"><a href="https://greenwin.bet/exchange/sport/1/market/{id_mercado}?affBetId=115748">{"Aposte Aqui"}</a></div>'
         st.markdown(link, unsafe_allow_html=True)
         st.write('______________________________________________')
         st.write('')
