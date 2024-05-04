@@ -41,6 +41,24 @@ def show_tela2():
     
     st.dataframe(Entradas)
 
+
+    base = pd.read_csv('https://github.com/futpythontrader/YouTube/raw/main/Bases_de_Dados/Betfair/Base_de_Dados_Betfair_Exchange_Back_Lay.csv')
+    flt = base.Date == str(dia)
+    base_today = base[flt]
+    base_today = base_today[['League','Home','Away','Goals_H','Goals_A','Goals_Min_H','Goals_Min_A']]
+    base_today = drop_reset_index(base_today)
+    if len(base_today) != 0:
+        Entradas_Resultado = pd.merge(Entradas, base_today, on=['League','Home', 'Away'])
+        Entradas_Resultado = drop_reset_index(Entradas_Resultado)
+        Entradas_Resultado['Profit'] = np.where(((Entradas_Resultado['Goals_H'] == 0) & (Entradas_Resultado['Goals_A'] == 1)), - (Entradas_Resultado['Odd_CS_0x1_Lay']-1), 0.94)
+        Entradas_Resultado['Profit_Acu'] = Entradas_Resultado['Profit'].cumsum()
+        Entradas_Resultado = Entradas_Resultado[['League','Home','Away','Goals_H','Goals_A','Goals_Min_H','Goals_Min_A','Profit','Profit_Acu']]
+        st.subheader("Resultados das Entradas")
+        st.dataframe(Entradas_Resultado)
+    else:
+        pass
+
+
     st.subheader("Entradas")
     st.text('')
 
@@ -64,3 +82,4 @@ def show_tela2():
         st.markdown(link, unsafe_allow_html=True)
         st.write('______________________________________________')
         st.write('')
+
