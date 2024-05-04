@@ -75,6 +75,8 @@ def show_tela1():
         Entradas_Resultado = Entradas_Resultado[['League','Home','Away','Goals_H','Goals_A','Goals_Min_H','Goals_Min_A','Profit','Profit_Acu']]
         st.subheader("Resultados das Entradas")
         st.dataframe(Entradas_Resultado)
+        st.subheader("Lucro Acumulado ao Longo do Tempo")
+        st.line_chart(Entradas_Resultado['Profit_Acu'])
     else:
         pass
 
