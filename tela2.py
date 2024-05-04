@@ -3,6 +3,8 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from datetime import date
+from rename import *
+from leagues import *
 
 def drop_reset_index(df):
     df = df.dropna()
@@ -23,6 +25,20 @@ def ajustar_id_mercado(id_mercado, comprimento_decimal_desejado=9):
     id_mercado_ajustado = parte_inteira + '.' + parte_decimal
     return id_mercado_ajustado
 
+def remove_outliers(df, cols):
+    for col in cols:
+        Q1 = df[col].quantile(0.05)
+        Q3 = df[col].quantile(0.95)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+        df = df[(df[col] >= lower_bound) & (df[col] <= upper_bound)]
+    return df
+
+def entropy(probabilities):
+    probabilities = probabilities[probabilities > 0]
+    return -np.sum(probabilities * np.log2(probabilities))
+
 # Iniciando a Tela 2
 def show_tela2():
     st.header("Lay Away")
@@ -30,6 +46,10 @@ def show_tela2():
     dia = st.date_input("Data de Análise", date.today())
 
     Jogos_do_Dia = pd.read_csv(f'https://raw.githubusercontent.com/futpythontrader/YouTube/main/Jogos_do_Dia/Betfair/Jogos_do_Dia_Betfair_Back_Lay_{dia}.csv')
+
+    rename_leagues(Jogos_do_Dia)
+    Jogos_do_Dia = Jogos_do_Dia[Jogos_do_Dia['League'].isin(leagues) == True]
+    rename_teams(Jogos_do_Dia)
     
     Jogos_do_Dia['VAR1'] = np.sqrt((Jogos_do_Dia['Odd_H_Back'] - Jogos_do_Dia['Odd_A_Back'])**2)
     Jogos_do_Dia['VAR2'] = np.degrees(np.arctan((Jogos_do_Dia['Odd_A_Back'] - Jogos_do_Dia['Odd_H_Back']) / 2))
@@ -39,8 +59,8 @@ def show_tela2():
     Entradas = Jogos_do_Dia[flt]
     Entradas = drop_reset_index(Entradas)
     
+    st.subheader("Entradas")
     st.dataframe(Entradas)
-
 
     base = pd.read_csv('https://github.com/futpythontrader/YouTube/raw/main/Bases_de_Dados/Betfair/Base_de_Dados_Betfair_Exchange_Back_Lay.csv')
     flt = base.Date == str(dia)
@@ -50,7 +70,7 @@ def show_tela2():
     if len(base_today) != 0:
         Entradas_Resultado = pd.merge(Entradas, base_today, on=['League','Home', 'Away'])
         Entradas_Resultado = drop_reset_index(Entradas_Resultado)
-        Entradas_Resultado['Profit'] = np.where(((Entradas_Resultado['Goals_H'] == 0) & (Entradas_Resultado['Goals_A'] == 1)), - (Entradas_Resultado['Odd_CS_0x1_Lay']-1), 0.94)
+        Entradas_Resultado['Profit'] = np.where(((Entradas_Resultado['Goals_H']) < (Entradas_Resultado['Goals_A'] )), - (Entradas_Resultado['Odd_A_Lay']-1), 0.94)
         Entradas_Resultado['Profit_Acu'] = Entradas_Resultado['Profit'].cumsum()
         Entradas_Resultado = Entradas_Resultado[['League','Home','Away','Goals_H','Goals_A','Goals_Min_H','Goals_Min_A','Profit','Profit_Acu']]
         st.subheader("Resultados das Entradas")
