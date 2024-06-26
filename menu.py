@@ -4,6 +4,7 @@ import csv
 from tela1 import show_tela1
 from tela2 import show_tela2
 from tela3 import show_tela3
+from tela6 import show_tela6
 
 # Função para verificar o login do usuário
 def verificar_login(usuario, senha):
@@ -92,8 +93,8 @@ def main():
                 st.error("Usuário ou senha incorretos.")
     else:
         # Menu de navegação
-        st.title("Ciência das Apostas")
-        paginas = ['Lay Home', 'Lay Away', 'Lay 0 x 1']
+        st.title("Monstro dos Greens")
+        paginas = ['Lay Home', 'Lay Away', 'Lay 0 x 1', 'Resultados']
         escolha = st.radio('', paginas)
         if escolha == 'Lay Home':
             show_tela1()
@@ -101,6 +102,8 @@ def main():
             show_tela2()
         elif escolha == 'Lay 0 x 1':
             show_tela3()
+        elif escolha == 'Resultados':
+            show_tela6()     
 
         # Opções para o administrador
         # Dentro da função main()
@@ -173,7 +176,6 @@ def main():
 
 if __name__ == "__main__":
     main()
-    
-st.write("<h1 style='text-align: center; font-size: 15px;'>Quer participar? Chama o Altair<br>Zap: (22)98802-4908</h1>", unsafe_allow_html=True)
 
 
+st.write("<h1 style='text-align: center; font-size: 15px;'>Quer participar? Chama o Altair<br>Zap: (22)98802-4908</h1>", unsafe_allow_html=True)   
